@@ -1,0 +1,13 @@
+[package]
+name = "dice-http"
+version = "0.1.0"
+authors = ["Gero <kacper.lesnianski@wp.pl>"]
+edition = "2018"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+heapless = "0.7.3"
+httparse = { version= "1.3.5", default-features=false}
+smoltcp = { version = "0.7.0", default-features = false, features = ["ethernet", "proto-ipv4", "proto-ipv6", "socket-raw", "socket-udp", "socket-tcp", "socket-icmp", "proto-dhcpv4"] }
+spin = "0.9.0"

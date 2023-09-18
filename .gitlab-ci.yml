@@ -1,0 +1,47 @@
+image: ger0/dicedocker:latest
+
+stages:
+  - build
+  - test
+
+build_h7:
+  stage: build
+  script:
+    #cd is required because otherwise cargo won't read .cargo/config
+    - cd dice
+    #build debug and release binaries
+    - export CC=/usr/bin/clang
+    - cargo build
+    - cargo build --release
+    - cd ..
+  artifacts:
+    paths:
+      - target/thumbv7em-none-eabihf/debug/dice
+      - target/thumbv7em-none-eabihf/release/dice
+
+build_f4:
+  stage: build
+  script:
+    #cd is required because otherwise cargo won't read .cargo/config
+    - cd dice
+    #build debug and release binaries
+    - export CC=/usr/bin/clang
+    - cargo build --features="stm32f429" --no-default-features
+    - cargo build --release --features="stm32f429" --no-default-features
+    - cd ..
+  artifacts:
+    paths:
+      - target/thumbv7em-none-eabihf/debug/dice
+      - target/thumbv7em-none-eabihf/release/dice
+
+test:
+  stage: test
+  script:
+    #nightly switch
+    - rustup default nightly
+    #we need to cd to dice-common directory, running cargo test on dice (platform-specific) crate will result in an error
+    - cd dice-common
+    - cargo test --verbose > test_results.txt
+  artifacts:
+    paths:
+      - dice-common/test_results.txt

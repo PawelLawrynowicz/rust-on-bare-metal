@@ -1,0 +1,9 @@
+[workspace]
+
+members = [
+    "dice",
+    "dice-common",
+    "dice-http-client",
+    "dice-http",
+    "dice-simulation"
+]

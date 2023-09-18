@@ -1,0 +1,5 @@
+/target
+openocd*
+/dice-common/target
+.vscode/*
+Cargo.lock

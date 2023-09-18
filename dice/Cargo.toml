@@ -1,0 +1,63 @@
+[package]
+name = "dice"
+# Device for Investors and Crypto Enthusiasts
+version = "0.1.0"
+authors = ["gero <kacper.lesnianski@wp.pl>"]
+edition = "2018"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[profile.release]
+opt-level = 'z' # turn on maximum optimizations. Gotta conserve memory!
+lto = true      # Link-time-optimizations for further size reduction
+
+[dependencies]
+#Our crate with tests and non-platform-specific code
+dice-common = { path = "../dice-common" }
+dice-http-client = { path = "../dice-http-client" }
+dice-http = { path = "../dice-http" }
+
+cortex-m-semihosting = "0.3.7"
+
+#Network stack dependencies
+drogue-network = "0.2.0"
+drogue-tls = { git="https://github.com/gero0/drogue-tls.git" }
+drogue-tls-sys = { git="https://github.com/gero0/drogue-tls.git" }
+spin = "0.9.0"
+nanorand = { version="0.5.2", default-features = false, features = ["wyrand"] }
+smoltcp = { version = "0.7.0", default-features = false, features = ["ethernet", "proto-ipv4", "proto-ipv6", "socket-raw", "socket-udp", "socket-tcp", "socket-icmp", "proto-dhcpv4"] }
+
+serde = { version = "1.0", default-features = false, features = ["derive"] }
+serde-json-core = "0.4.0"
+heapless = { version = "0.7.3", features=["serde"] }
+alloc-cortex-m = "0.4.1"
+
+httparse = {version="1.3.5", default-features=false}
+
+#RTIC and its dependencies
+cortex-m-rtic = "0.5.6"
+panic-semihosting = "0.5.6"
+
+#HAL and its dependencies
+embedded-hal = "0.2.4"
+cortex-m = "0.7.1"
+cortex-m-rt = "0.6.13"
+nb = "0.1.2"
+panic-halt = "0.2.0" # Panic behaviour, see https://crates.io/keywords/panic-impl for alternatives
+
+stm32f4xx-hal = { version = "0.8.3", features = ["rt", "stm32f429"], optional = true}
+stm32h7xx-hal = { version = "0.9.0", features = ["rt", "stm32h743v", "ethernet"], optional = true}
+stm32-eth = { git = "https://github.com/stm32-rs/stm32-eth.git", branch = "master", features = ["stm32f429", "smoltcp-phy"], optional = true}
+
+hub75={git = "https://github.com/PawelLawrynowicz/hub75-rs", branch = "sm-optimization", features=["stripe-multiplexing"]}
+embedded-graphics = "0.6.2"
+
+rust-fsm = { version = "0.5", default-features = false, features = ["dsl"] }
+
+[features]
+default = ["stm32h743"]
+stm32f429 = ["stm32f4xx-hal", "stm32-eth"]
+stm32h743 = ["stm32h7xx-hal"]
+# A feature used for conditional compilation. Enable if you want to use semihosting
+use_semihosting = []
+
